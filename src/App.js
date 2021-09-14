@@ -1,9 +1,11 @@
 import { useState } from "react"
 import './App.css';
+import AddTask from "./components/AddTask";
 import Header from './components/Header'
 import Tasks from './components/Tasks';
 
 function App() {
+  const [isAdding, setIsAdding] = useState(false)
   const [tasks, setTasks] = useState([
     {
         id: 1,
@@ -25,6 +27,13 @@ function App() {
     }
 ])
 
+//Add task
+const addTask = (task) => {
+  const id = Math.floor(Math.random() * 10000) + 1
+  let newTask = { id, ...task }
+  setTasks([...tasks, newTask])
+}
+
 //Delete task
 const deleteTask = (id) => {
   setTasks(tasks.filter((task) => task.id !== id))
@@ -38,7 +47,8 @@ const toggleReminder = (id) => {
 return (
     <div className="App">
       <div className="container">
-        <Header name="Gerry" />
+        <Header name="Gerry" onAdd={() => setIsAdding(!isAdding)} isAdding={isAdding} />
+        { isAdding && <AddTask onAdd={addTask} /> }
         {tasks.length > 0 ? <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder} /> : 'There are no tasks'}
       </div>
     </div>
